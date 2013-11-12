@@ -17,7 +17,7 @@ public class Account extends Model
 	public String username;
 	public String password;
 	
-	@OneToMany(mappedBy="uploader", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="uploadedBy", cascade=CascadeType.ALL)
 	public List<Document> documents;
 	
 	public Account(String username, String password) {

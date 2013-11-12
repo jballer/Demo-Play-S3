@@ -1,5 +1,7 @@
 import org.junit.*;
 
+import controllers.Files;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -77,5 +79,5 @@ public class BasicTest extends UnitTest {
         assertEquals(userCount-1, Account.findAll().size());
         assertEquals(docCount-userDocCount, Document.findAll().size());
     }
-
+    
 }

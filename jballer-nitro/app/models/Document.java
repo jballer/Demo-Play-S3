@@ -8,33 +8,36 @@ import play.db.jpa.*;
 
 import play.data.validation.*;
 import play.libs.MimeTypes;
-import play.modules.s3blobs.S3Blob;
 
 @Entity
 public class Document extends Model
 {
 	@ManyToOne
-	public Account uploader;
+	public Account uploadedBy;
 	
 	public String fileName;
-	public S3Blob blob;
+	public S3Blob file;
     public String comment;
 
     public Document(Account uploadedBy, InputStream is, String fileName, String comment) {
     	// Set properties
-    	this.uploader = uploadedBy;
+    	this.uploadedBy = uploadedBy;
     	this.fileName = fileName;
     	this.comment = comment;
     	
     	// If there's a file, save it as an S3Blob
     	if(is != null) {
-    		this.blob = new S3Blob();
-    		this.blob.set(is, MimeTypes.getContentType(fileName));
+    		this.file = new S3Blob();
+    		this.file.set(is, MimeTypes.getContentType(fileName));
     	}
     }
     
     public Document delete() {
-    	this.uploader.documents.remove(this);
+    	if(this.file != null) {
+    		file.delete();
+    	}
+    	
+    	this.uploadedBy.documents.remove(this);
     	
     	return super.delete();
     }
