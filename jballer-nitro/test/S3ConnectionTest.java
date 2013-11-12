@@ -13,7 +13,7 @@ import play.modules.s3blobs.S3Blob;
 public class S3ConnectionTest extends UnitTest {
 
     @Test
-    public void testS3Upload() {
+    public void testS3UploadAndDownload() {
     	// Create a blob
     	S3Blob blob = new S3Blob();
     	
