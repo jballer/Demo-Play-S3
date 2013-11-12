@@ -12,5 +12,10 @@ public class Application extends Controller {
     public static void index() {
         render();
     }
+    
+    public static void myDocuments() {
+    	Account user = new Account("me@me.com","me");
+    	render("Application/index.html",user);
+    }
 
 }

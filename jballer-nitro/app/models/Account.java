@@ -3,7 +3,9 @@ package models;
 import java.io.InputStream;
 import java.util.regex.Pattern;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -20,10 +22,14 @@ public class Account extends Model
 	@OneToMany(mappedBy="uploadedBy", cascade=CascadeType.ALL)
 	public List<Document> documents;
 	
+	@OneToMany(mappedBy="account", cascade=CascadeType.ALL)
+	public Set<UserTagCount> tags;
+	
 	public Account(String username, String password) {
 		this.username = username;
 		this.password = password;
 		this.documents = new ArrayList<Document>();
+		this.tags = new HashSet<UserTagCount>();
 	}
 	
 	public Document addDocument(InputStream is, String fileName, String comment) {
@@ -32,6 +38,13 @@ public class Account extends Model
 		this.save();
 		
 		return doc;
+	}
+	
+	public UserTagCount findOrCreateUserCountForTagNamed(String name) {
+		Tag t = Tag.findOrCreateByName(name);
+		UserTagCount ut = UserTagCount.findOrCreate(this, t);
+		this.tags.add(ut);
+		return ut;
 	}
 	
 	public String toString() {

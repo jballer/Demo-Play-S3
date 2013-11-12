@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map;
 
+import models.Tag;
+
 import org.junit.Test;
 
 import controllers.Files;
@@ -13,6 +15,7 @@ import play.test.UnitTest;
 
 
 public class DocumentParsingTest extends UnitTest {
+	
 	@Test
     public void parseAllWords() {
     	
@@ -97,4 +100,18 @@ public class DocumentParsingTest extends UnitTest {
     	assertEquals(10, tags.get("floor"));
     	assertEquals(2, tags.get("chocolate"));
 	}
+
+	@Test
+    public void createTags() {
+		Tag.deleteAll();
+		
+    	Tag t = Tag.findOrCreateByName("afajlfda");
+    	t.incrementCount(2);
+    	assertEquals(2, t.count);
+    	
+    	t = Tag.findOrCreateByName("afajlfda");
+    	t.incrementCount(2);
+    	assertEquals(4, t.count);
+    	
+    }
 }

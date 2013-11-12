@@ -29,7 +29,7 @@ import models.Document;
 import models.S3Blob;
 import models.Account;
 import models.Tag;
-import models.UserTag;
+import models.UserTagCount;
 import play.db.jpa.JPA;
 import play.libs.MimeTypes;
 import play.mvc.Controller;
@@ -49,13 +49,29 @@ public class Files extends Controller
 		}
 		else
 		{
-			Account uploadedBy = Account.findById(userID);
+			Account user = Account.findById(userID);
 			InputStream is = new FileInputStream(file);
 			String fileName = file.getName();
-			final Document doc = new Document(uploadedBy, is, fileName, comment);
+			final Document doc = new Document(user, is, fileName, comment);
 			doc.save();
 	    
-		    //TODO: add rendering for parseTags(file, doc);
+		    // Get the tags for this document
+			Map<String, Integer> tags = parseTagsFromStream(is, 3, 3);
+		    Iterator it = tags.keySet().iterator();
+		    while(it.hasNext()) {
+		    	// For each tag, add it to the global count and the user count
+		    	String name = (String) it.next();
+		    	
+		    	Integer currentCount = tags.get(name);
+		    	
+		    	// Global tags
+		    	Tag tag = Tag.findOrCreateByName(name);
+		    	tag.incrementCount(currentCount);
+		    	
+		    	// User tags
+		    	user.findOrCreateUserCountForTagNamed(name).increment(currentCount);
+		    	
+		    }
 		  }
 	    
 		  //TODO: add rendering for listUserUploads();

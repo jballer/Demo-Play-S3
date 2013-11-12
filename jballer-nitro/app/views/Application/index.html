@@ -1,4 +1,9 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 
-#{welcome /}
+#{if user}
+	<h1>Yes</h1>
+#{/if}
+#{else}
+	<h1>No</h1>
+#{/else}
