@@ -1,4 +1,5 @@
 # Application dependencies
 
 require:
-    - play
+    - play 1.2.6
+    - play -> s3blobs 0.1
