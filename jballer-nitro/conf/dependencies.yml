@@ -2,5 +2,16 @@
 
 require:
     - play 1.2.6
-    - play -> s3blobs 0.2
     - play -> secure
+    # S3Blob
+    - com.amazonaws -> aws-java-sdk 1.3.6:
+        exclude:
+            - org.freemarker -> freemarker
+            - org.springframework -> spring-beans
+            - org.springframework -> spring-core
+            - org.springframework -> spring-context
+            - org.springframework -> spring-aop
+            - aopalliance -> aopalliance
+            - org.springframework -> spring-expression
+            - org.aspectj -> aspectjrt
+            - stax -> stax-api

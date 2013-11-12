@@ -1,19 +1,20 @@
 import org.junit.*;
+import org.junit.rules.ExpectedException;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 
 import java.io.*;
 import java.util.*;
 
 import play.libs.MimeTypes;
 import play.test.*;
-import models.*;
-import play.modules.s3blobs.S3Blob;
+import models.S3Blob;
 
 public class S3ConnectionTest extends UnitTest {
 
-    @Test
-    public void testS3UploadAndDownload() {
+	@Test
+    public void testS3UploadDownloadDelete() {
     	// Create a blob
     	S3Blob blob = new S3Blob();
     	
@@ -24,6 +25,16 @@ public class S3ConnectionTest extends UnitTest {
         // Get the data out of it
     	String s = getStringFromInputStream(blob.get());
     	assertEquals(s, "testing!");
+    	
+    	// Delete the blob
+    	String key = blob.delete();
+    	
+    	try {
+    		S3Blob.s3Client.getObject(S3Blob.s3Bucket, key);
+    		fail( "S3 file did not delete" );
+    	} catch(AmazonS3Exception e) {
+    		assertTrue(e.getMessage().contains("The specified key does not exist"));
+    	}
     }
     
     private static String getStringFromInputStream(InputStream is) {
